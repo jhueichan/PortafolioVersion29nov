@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+  <!--  <package name="default" extends="struts-default,json-default">   -->
+    <package name="default" extends="struts-default">
+        
+    </package>
+    <package name="controllers" namespace="/" extends="struts-default,json-default">
+      <!--  acciones de materiales -->    
+        <action name="materialesAccion" class="com.action.MaterialAction" method="list">
+            <result name="success">/materiales.jsp</result>
+        </action>   
+       <action name="buscaPorCodigo" class="com.action.MaterialAction" method="buscaMatPorCodigo">
+            <result name="success">/materiales.jsp</result>
+        </action>         
+        <action name="actualizaMaterial" class="com.action.MaterialAction" method="update">
+             <result type="chain">materialesAccion</result>
+        </action>  
+        <action name="ingresarMaterial" class="com.action.MaterialAction" method="create">
+             <result type="chain">materialesAccion</result>
+        </action>   
+      <action name="eliminarMaterialAccion" class="com.action.MaterialAction" method="delete">       
+            <result type="chain">materialesAccion</result>
+        </action>
+     <!--  FIN de acciones de materiales --> 
+     <!-- XML DE LOGEO Y LOGOUT -->    
+   <action name="logeoXML" class="com.action.MetodosAction" method="IniciarSesion">
+        <result name="success">/Bienvenido.jsp</result>
+        <result name="error">/login.jsp</result>
+    </action>
+    
+    <action name="cerrarSesionXML" class="com.action.MetodosAction" method="cerrarSesion">
+        <result name="success">/login.jsp</result>
+        <result name="error">/login.jsp</result>
+    </action>
+    <action name="AyudaXML" class="com.action.MetodosAction" method="cerrarSesion">
+        <result name="success">/Ayuda.jsp</result>
+        <result name="error">/Ayuda.jsp</result>
+    </action>    
+
+<!--    acciones del proyecto  --> 
+      <action name="listarProyectos" class="com.action.ProyectosAction" method="list">
+            <result>/proyectos.jsp</result>
+        </action>
+       <action name="proyecto" class="com.action.ProyectosAction" method="execute">
+            <result>/proyectos.jsp</result>
+        </action>
+        
+        <action name="IngresarProyecto" class="com.action.ProyectosAction" method="create">
+            <result name="success">/proyectos.jsp</result>
+        </action>  
+        
+<!--    acciones de las afps -->
+        <action name="listaAfps" class="com.action.AfpAction" method="list">
+            <result name="success">/afp.jsp</result>
+        </action> 
+<!--    acciones de las Ciudades --> 
+        <action name="listaCiudades" class="com.action.CiudadAction" method="list">
+            <result name="success">/ciudades.jsp</result>
+        </action>         
+        
+  <!--     Ingreso de un empleado   -->
+        <action name="ListadoEmpleados" class="com.action.EmpleadoAction" method="list">
+             <result name="input">empleados.jsp</result>
+             <result>empleados.jsp</result>
+         </action>
+  
+  
+    </package>
+</struts>
+ 
