@@ -1,11 +1,10 @@
 
 package com.dao;
 
-import com.model.Empleado;
+
 import com.model.DetalleOrdenCompra;
 import com.model.Material;
 import com.model.OrdenCompra;
-import com.model.Proveedor;
 import com.service.DetalleOrdenCompraInterface;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
