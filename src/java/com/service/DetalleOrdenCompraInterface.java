@@ -10,7 +10,7 @@ public interface DetalleOrdenCompraInterface {
     
     public static Connection dbConnection= DataAccessObject.getConnection();   
     
-    public boolean eliminar(int id) throws Exception;
+    public boolean eliminar(int id,int mat) throws Exception;
     public List listar() throws Exception;
     public boolean ingresar(DetalleOrdenCompra obj) throws Exception;   
     public boolean actualizar(DetalleOrdenCompra obj) throws Exception;

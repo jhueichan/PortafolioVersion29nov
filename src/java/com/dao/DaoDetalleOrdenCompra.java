@@ -23,11 +23,14 @@ public class DaoDetalleOrdenCompra implements DetalleOrdenCompraInterface {
     }
 
     @Override
-    public boolean eliminar(int id) throws Exception {
-      String deleteQuery = "DELETE FROM MATER_OC WHERE ORDEN_COMPRA_NORDEN = ?";
+    public boolean eliminar(int ordenComp,int mat) throws Exception {
+      String deleteQuery = "DELETE FROM MATER_OC "
+              + "       WHERE ORDEN_COMPRA_NORDEN = ? "
+              + "       AND  MATERIALES_CODIGO = ? ";
 	try {
 		pStmt = dbConnection.prepareStatement(deleteQuery);
-		pStmt.setInt(1 , id);
+		pStmt.setInt(1 , ordenComp);
+                pStmt.setInt(2 , mat);
 		pStmt.executeUpdate();
                 return true;   
 	} catch (SQLException e) {
@@ -51,14 +54,11 @@ public class DaoDetalleOrdenCompra implements DetalleOrdenCompraInterface {
                         orden.setOrdenCompra(ordeComp);
                         Material mat=daoMat.buscaMatPorCodigo(rs.getInt(2));
                         orden.setMaterial(mat);
+                        orden.setCantidad(rs.getInt(3));
+                        orden.setUnidadMedida(rs.getString(4));
+                        orden.setPrecioUnitario(rs.getDouble(5));
+                        orden.setPrecioItem(rs.getDouble(6)); 
                         
-                        orden.setCantidad(rs.getInt(3));                        
-                        Empleado empleado = daoEmpleado.buscarPorID(rs.getString(2));
-			orden.setEmpleado(empleado);
-                        Proveedor prov = daoProveedor.buscarPorID(rs.getString(3));
-			orden.setProvedor(prov);  
-                        orden.setFechaEntrega(rs.getDate(4));
-                        orden.setLugarEntrega(rs.getString(5));
 			ordenes.add(orden);	
                 }
 	} catch (SQLException e) {
@@ -69,14 +69,18 @@ public class DaoDetalleOrdenCompra implements DetalleOrdenCompraInterface {
 
     @Override
     public boolean ingresar(DetalleOrdenCompra obj) throws Exception {
-       String insertQuery = "INSERT INTO ORDEN_COMPRA VALUES (OCOMPRA_SEQ.NextVal,?,?,?,?)";
+       String insertQuery = "INSERT INTO MATER_OC VALUES (?,?,?,?,?,?)";
        try {
-        	pStmt = dbConnection.prepareStatement(insertQuery);             
-		pStmt.setString(1, obj.getEmpleado().getRut());
-                pStmt.setString(2, obj.getProvedor().getRut());
-                pStmt.setDate(3, obj.getFechaEntrega());
-                pStmt.setString(4, obj.getLugarEntrega());
-        	pStmt.executeUpdate();
+        	pStmt = dbConnection.prepareStatement(insertQuery); 
+                
+		pStmt.setInt(1, obj.getOrdenCompra().getNumero_orden());
+                pStmt.setInt(2, obj.getMaterial().getCodigo());
+                pStmt.setInt(3, obj.getCantidad());
+                pStmt.setString(4, obj.getUnidadMedida());
+                pStmt.setDouble(5,obj.getPrecioUnitario());
+                pStmt.setDouble(6,obj.getPrecioItem());
+                
+                pStmt.executeUpdate();
             return true;      
 	} catch (SQLException e) {
 		System.err.println(e.getMessage());   
@@ -86,16 +90,20 @@ public class DaoDetalleOrdenCompra implements DetalleOrdenCompraInterface {
 
     @Override
     public boolean actualizar(DetalleOrdenCompra obj) throws Exception {
-      String updateQuery = "UPDATE ORDEN_COMPRA SET EMPLEADO_RUT = ? PROVEEDOR_RUT = ?"
-              +             "FECHA_ENTREGA = ?,LUGAR_ENTREGA = ?  WHERE NORDEN = ?";
+      String updateQuery = "UPDATE ORDEN_COMPRA SET  "
+              +             "CANTIDAD = ?, U_MEDIDA = ? "
+              +             "PRECIO_UNIT = ?, PRECIO_ITEM = ?  "              
+              + "WHERE ORDEN_COMPRA_NORDEN = ? AND  MATERIALES_CODIGO = ? ";
 	try {
 		pStmt = dbConnection.prepareStatement(updateQuery);
-                
-		pStmt.setString(1, obj.getEmpleado().getRut());
-                pStmt.setString(2, obj.getProvedor().getRut());
-                pStmt.setDate(3, obj.getFechaEntrega());
-                pStmt.setString(4, obj.getLugarEntrega());                
-               pStmt.setString(5, obj.getLugarEntrega());
+                 pStmt.setInt(1, obj.getCantidad());
+                pStmt.setString(2, obj.getUnidadMedida());
+                  pStmt.setDouble(3,obj.getPrecioUnitario());
+                 pStmt.setDouble(4,obj.getPrecioItem());                   
+		pStmt.setInt(7, obj.getOrdenCompra().getNumero_orden());
+                pStmt.setInt(8, obj.getMaterial().getCodigo());  
+              
+        
 		pStmt.executeUpdate();
                      return true;
 	} catch (SQLException e) {
@@ -107,19 +115,22 @@ public class DaoDetalleOrdenCompra implements DetalleOrdenCompraInterface {
     @Override
     public  DetalleOrdenCompra buscarPorID(int id) throws Exception {
      DetalleOrdenCompra orden=new DetalleOrdenCompra();
-     String query = "SELECT * FROM ORDEN_COMPRA WHERE NORDEN = ?";   
+     String query = "SELECT * FROM MATER_OC"
+                    + " WHERE ORDEN_COMPRA_NORDEN = ?"
+                     + " AND  MATERIALES_CODIGO = ?";   
       try {
                   pStmt = dbConnection.prepareStatement(query);            
 		  pStmt.setInt(1,id);	
                   ResultSet rs = pStmt.executeQuery();                 
 		while (rs.next()) {
-			 orden.setNumero_orden(rs.getInt(1));
-                        Empleado empleado = daoEmpleado.buscarPorID(rs.getString(2));
-			orden.setEmpleado(empleado);
-                        Proveedor prov = daoProveedor.buscarPorID(rs.getString(3));
-			orden.setProvedor(prov);  
-                        orden.setFechaEntrega(rs.getDate(4));
-                        orden.setLugarEntrega(rs.getString(5));	
+		        OrdenCompra ordeComp = daoOrdCom.buscarPorID(rs.getInt(1)); 
+                        orden.setOrdenCompra(ordeComp);
+                        Material mat=daoMat.buscaMatPorCodigo(rs.getInt(2));
+                        orden.setMaterial(mat);
+                        orden.setCantidad(rs.getInt(3));
+                        orden.setUnidadMedida(rs.getString(4));
+                        orden.setPrecioUnitario(rs.getDouble(5));
+                        orden.setPrecioItem(rs.getDouble(6)); 	
                         
 		}
 	} catch (SQLException e) {
