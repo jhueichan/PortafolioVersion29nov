@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import com.model.EstadoCivil;
+import com.model.FormaPago;
 import com.model.Nacionalidad;
 import com.model.Prevision;
 import com.model.Profesion;
@@ -22,12 +23,7 @@ import java.sql.CallableStatement;
 
 public class DaoCliente implements ClienteInterface {
     DaoCiudad daoCiudad;
-    DaoNacionalidad daoNacionalidad;
-    DaoEstadoCivil daoEstadoCivil;
-    DaoAfp daoAfp;
-    DaoPrevision daoPrevision;
-    DaoProfesion daoProfesion;
-    DaoRol daoRol;     
+    DaoFormaPago daoFormaPago;  
     PreparedStatement pStmt; 
     
     public DaoCliente() {        
@@ -37,7 +33,7 @@ public class DaoCliente implements ClienteInterface {
 
         CallableStatement Cstm = null;
         ResultSet Rst = null;
-        Cliente empleado = new Cliente();
+        Cliente cliente = new Cliente();
         Rol r = new Rol();
         try{         
             String Comando = "call pa_ValidarCliente(?,?)";
@@ -52,12 +48,12 @@ public class DaoCliente implements ClienteInterface {
         }catch(Exception e){
             System.out.println("error login en ----> ValidarCliente");
         }
-        return empleado;
+        return cliente;
     }
 
     @Override
     public boolean eliminar(String rut) throws Exception {
-        String deleteQuery = "DELETE FROM EMPLEADO WHERE RUT = ?";
+        String deleteQuery = "DELETE FROM CLIENTE WHERE RUT = ?";
         try {
             pStmt = dbConnection.prepareStatement(deleteQuery);
             pStmt.setString(1, rut);
@@ -71,68 +67,54 @@ public class DaoCliente implements ClienteInterface {
 
     @Override
     public List listar() throws Exception {
-     List<Cliente> empleados = new ArrayList<Cliente>();
-   	String query = "SELECT * FROM EMPLEADO ORDER BY RUT";
+     List<Cliente> clientes = new ArrayList<Cliente>();
+   	String query = "SELECT * FROM CLIENTE ORDER BY RUT";
 	try {              
 		Statement stmt = dbConnection.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
 		
                 while (rs.next()) {
-	        Cliente empleado = new Cliente();                
-                empleado.setRut(rs.getString(1));
-                empleado.setNombres(rs.getString(2));
-                empleado.setApellidos(rs.getString(3));
-                empleado.setDireccion(rs.getString(4)); 
-                Ciudad ciudad=daoCiudad.buscarPorID(rs.getInt(5));
-                empleado.setCiudad(ciudad);
-                Nacionalidad nacionalidad= daoNacionalidad.buscarPorID(rs.getInt(6));
-                empleado.setNacionalidad(nacionalidad);                
-                empleado.setFechaNac(rs.getDate(7));                
-                EstadoCivil estado=daoEstadoCivil.buscarPorID(rs.getInt(8));
-                empleado.setEstadoCivil(estado);
-                empleado.setCargasFam(rs.getString(9));
-                Afp afp= daoAfp.buscarPorID(rs.getInt(10));
-                empleado.setAfp(afp);
-                Prevision prevision=daoPrevision.buscarPorID(rs.getInt(11));
-                empleado.setPrevision(prevision);                
-                empleado.setTelefono(rs.getString(12));
-                empleado.setEmail(rs.getString(13));
-                Profesion  profesion= daoProfesion.buscarPorID(rs.getInt(14));
-                empleado.setProfesion(profesion);
-                Rol rol= daoRol.buscarPorID(rs.getInt(15));
-                empleado.setRol(rol);                
-                empleado.setPassword(rs.getString(16));
+	        Cliente cliente = new Cliente();    
+                
+                cliente.setRut(rs.getString(1));           
+                cliente.setRazonSocial(rs.getString(2));                
+                cliente.setDireccion(rs.getString(3)); 
+                Ciudad ciudad=daoCiudad.buscarPorID(rs.getInt(4));
+                cliente.setCiudad(ciudad); 
+                cliente.setContacto(rs.getString(5));
+                cliente.setTelefono(rs.getString(6));
+                cliente.setEmail(rs.getString(7));
+                cliente.setWebsite(rs.getString(8));
+                cliente.setActivo(rs.getString(9));
+                FormaPago forma=daoFormaPago.buscarPorID(rs.getInt(10));
+                cliente.setFormaPago(forma);
+               
 		}
 	} catch (SQLException e) {
 		System.err.println(e.getMessage());
 	}
-	return empleados;        
+	return clientes;        
     }
 
     @Override
-    public boolean ingresar(Cliente empleado) throws Exception {
+    public boolean ingresar(Cliente cliente) throws Exception {
      Cliente emp = new Cliente();
         
-        //System.out.println("el empleado vive en la ciudad de : "+emp.getCiudad().getNombre());
-         String insertQuery =    "INSERT INTO EMPLEADO VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        //System.out.println("el cliente vive en la ciudad de : "+emp.getCiudad().getNombre());
+         String insertQuery =    "INSERT INTO CLIENTE VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
             pStmt = dbConnection.prepareStatement(insertQuery);
-            pStmt.setString(1, empleado.getRut());
-            pStmt.setString(2, empleado.getNombres());
-            pStmt.setString(3, empleado.getApellidos());
-            pStmt.setString(4, empleado.getDireccion());
-            pStmt.setInt(5,empleado.getCiudad().getId());            
-            pStmt.setInt(6, empleado.getNacionalidad().getId());
-            pStmt.setDate(7,empleado.getFechaNac());        
-            pStmt.setInt(8,empleado.getEstadoCivil().getId());    
-            pStmt.setString(9, empleado.getCargasFam());            
-            pStmt.setInt(10, empleado.getAfp().getId());
-            pStmt.setInt(11, empleado.getPrevision().getId());
-            pStmt.setString(12, empleado.getTelefono());
-            pStmt.setString(13, empleado.getEmail());
-            pStmt.setInt(14, empleado.getProfesion().getId());
-            pStmt.setInt(15, empleado.getRol().getId());
-            pStmt.setString(16, empleado.getPassword());
+            pStmt.setString(1, cliente.getRut());
+            pStmt.setString(2, cliente.getRazonSocial());
+            pStmt.setString(3, cliente.getDireccion());
+            pStmt.setInt(4,cliente.getCiudad().getId()); 
+            pStmt.setString(5, cliente.getContacto());          
+            pStmt.setString(6, cliente.getTelefono());
+            pStmt.setString(7, cliente.getEmail());
+            pStmt.setString(8, cliente.getWebsite());
+            pStmt.setString(9, cliente.getActivo());
+            pStmt.setInt(1, cliente.getFormaPago().getId());
+            
             pStmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -142,42 +124,33 @@ public class DaoCliente implements ClienteInterface {
     }
 
     @Override
-    public boolean actualizar(Cliente empleado) throws Exception {
-         String updateQuery = "UPDATE EMPLEADO SET NOMBRES = ?,"
-                                                 + "APELLIDOS = ?,"
+    public boolean actualizar(Cliente cliente) throws Exception {
+         String updateQuery = "UPDATE CLIENTE SET                     "
+                                                 + "RAZON_SOCIAL = ?,"
                                                  + "DIRECCION = ?,"
                                                  + "CIUDAD_ID = ?,"
-                                                 + "NACIONALIDAD_ID = ?,"
-                                                 + "FECHA_NAC = ?,"
-                                                 + "ESTADO_CIVIL_ID = ?,"
-                                                 + "CARGAS_FAM = ?,"
-                                                 + "AFP_ID = ?,"
-                                                 + "PREVISION_ID = ?,"
+                                                 + "CONTACTO = ?,"
                                                  + "TELEFONO = ?,"
                                                  + "EMAIL = ?,"
-                                                 + "PROFESION_ID = ?,"
-                                                 + "ROL_ID = ?,"
-                                                 + "PASSWORD = ?"                                                
+                                                 + "WEBSITE = ?,"
+                                                 + "ACTIVO = ?,"
+                                                 + "FORMA_PAGO_ID = ?"                                                
                                                  +"  WHERE RUT = ?";
         try {
             pStmt = dbConnection.prepareStatement(updateQuery);            
             
-            pStmt.setString(1, empleado.getNombres());
-            pStmt.setString(2, empleado.getApellidos());
-            pStmt.setString(3, empleado.getDireccion());
-            pStmt.setInt(4,empleado.getCiudad().getId());            
-            pStmt.setInt(5, empleado.getNacionalidad().getId());
-            pStmt.setDate(6,empleado.getFechaNac());        
-            pStmt.setInt(7,empleado.getEstadoCivil().getId());    
-            pStmt.setString(8, empleado.getCargasFam());            
-            pStmt.setInt(9, empleado.getAfp().getId());
-            pStmt.setInt(10, empleado.getPrevision().getId());
-            pStmt.setString(11, empleado.getTelefono());
-            pStmt.setString(12, empleado.getEmail());
-            pStmt.setInt(13, empleado.getProfesion().getId());
-            pStmt.setInt(14, empleado.getRol().getId());
-            pStmt.setString(15, empleado.getPassword());
-            pStmt.setString(16, empleado.getRut());            
+         
+            pStmt.setString(1, cliente.getRazonSocial());
+            pStmt.setString(2, cliente.getDireccion());
+            pStmt.setInt(3,cliente.getCiudad().getId()); 
+            pStmt.setString(4, cliente.getContacto());          
+            pStmt.setString(5, cliente.getTelefono());
+            pStmt.setString(6, cliente.getEmail());
+            pStmt.setString(7, cliente.getWebsite());
+            pStmt.setString(8, cliente.getActivo());
+            pStmt.setInt(9, cliente.getFormaPago().getId());
+            pStmt.setString(10, cliente.getRut());
+            
             pStmt.executeUpdate();
           return true;
         } catch (SQLException e) {
@@ -188,41 +161,32 @@ public class DaoCliente implements ClienteInterface {
 
     @Override
     public Cliente buscarPorID(String rut) throws Exception {
-     Cliente empleado =new Cliente();
-     String query = "SELECT * FROM EMPLEADO WHERE RUT = ?";   
+     Cliente cliente =new Cliente();
+     String query = "SELECT * FROM CLIENTE WHERE RUT = ?";   
       try {
                   pStmt = dbConnection.prepareStatement(query);            
 		  pStmt.setString(1,rut);	
                   ResultSet rs = pStmt.executeQuery();                 
 		while (rs.next()) {
-                empleado.setRut(rs.getString(1));
-                empleado.setNombres(rs.getString(2));
-                empleado.setApellidos(rs.getString(3));
-                empleado.setDireccion(rs.getString(4)); 
-                Ciudad ciudad=daoCiudad.buscarPorID(rs.getInt(5));
-                empleado.setCiudad(ciudad);
-                Nacionalidad nacionalidad= daoNacionalidad.buscarPorID(rs.getInt(6));
-                empleado.setNacionalidad(nacionalidad);                
-                empleado.setFechaNac(rs.getDate(7));                
-                EstadoCivil estado=daoEstadoCivil.buscarPorID(rs.getInt(8));
-                empleado.setEstadoCivil(estado);
-                empleado.setCargasFam(rs.getString(9));
-                Afp afp= daoAfp.buscarPorID(rs.getInt(10));
-                empleado.setAfp(afp);
-                Prevision prevision=daoPrevision.buscarPorID(rs.getInt(11));
-                empleado.setPrevision(prevision);                
-                empleado.setTelefono(rs.getString(12));
-                empleado.setEmail(rs.getString(13));
-                Profesion  profesion= daoProfesion.buscarPorID(rs.getInt(14));
-                empleado.setProfesion(profesion);
-                Rol rol= daoRol.buscarPorID(rs.getInt(15));
-                empleado.setRol(rol);                
-                empleado.setPassword(rs.getString(16));						 	
+                    
+                cliente.setRut(rs.getString(1));           
+                cliente.setRazonSocial(rs.getString(2));                
+                cliente.setDireccion(rs.getString(3)); 
+                Ciudad ciudad=daoCiudad.buscarPorID(rs.getInt(4));
+                cliente.setCiudad(ciudad); 
+                cliente.setContacto(rs.getString(5));
+                cliente.setTelefono(rs.getString(6));
+                cliente.setEmail(rs.getString(7));
+                cliente.setWebsite(rs.getString(8));
+                cliente.setActivo(rs.getString(9));
+                FormaPago forma=daoFormaPago.buscarPorID(rs.getInt(10));
+                cliente.setFormaPago(forma);
+               	 	
 		}
 	} catch (SQLException e) {
 		System.err.println(e.getMessage());
 	}   
-        return  empleado;   
+        return  cliente;   
     
     }
 
