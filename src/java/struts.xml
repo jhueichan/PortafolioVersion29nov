@@ -66,7 +66,9 @@
              <result name="input">empleados.jsp</result>
              <result>empleados.jsp</result>
          </action>
-  
+          <action name="login" class="com.action.IngresoAction" method="validar">
+            <result>/index.jsp</result>
+        </action>
   
     </package>
 </struts>
