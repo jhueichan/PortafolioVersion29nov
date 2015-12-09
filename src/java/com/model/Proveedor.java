@@ -3,11 +3,11 @@ package com.model;
 public class Proveedor {
     
     private String rut,razon_social,direccion,contacto,telefono,email,website,activo;
-    private Ciudad ciudad;
-    private FormaPago formaPago;
+    private String ciudad;
+    private String formaPago;
     
 
-    public Proveedor(String rut, String razon_social, String direccion, String contacto, String telefono, String email, String website, String activo, Ciudad ciudad, FormaPago formaPago) {
+    public Proveedor(String rut, String razon_social, String direccion, String contacto, String telefono, String email, String website, String activo, String  ciudad, String formaPago) {
         this.rut = rut;
         this.razon_social = razon_social;
         this.direccion = direccion;
@@ -89,21 +89,23 @@ public class Proveedor {
         this.activo = activo;
     }
 
-    public Ciudad getCiudad() {
+    public String getCiudad() {
         return ciudad;
     }
 
-    public void setCiudad(Ciudad ciudad) {
+    public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
     }
 
-    public FormaPago getFormaPago() {
+    public String getFormaPago() {
         return formaPago;
     }
 
-    public void setFormaPago(FormaPago formaPago) {
+    public void setFormaPago(String formaPago) {
         this.formaPago = formaPago;
     }
+
+  
     
     
 }

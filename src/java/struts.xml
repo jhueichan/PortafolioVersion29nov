@@ -38,7 +38,37 @@
     <action name="AyudaXML" class="com.action.MetodosAction" method="cerrarSesion">
         <result name="success">/Ayuda.jsp</result>
         <result name="error">/Ayuda.jsp</result>
-    </action>    
+    </action>
+   <!-- Cerrar Sesion>-->
+    <action name="cerrar_sesion" class="com.action.IngresoAction" method="cerrar_sesion" >
+        <result>/Ingreso.jsp</result>
+    </action>
+    <!-- cotizaciones-->
+    <action name="cotizacion" class="com.action.CotizacionAction" method="list">
+        <result>/cotizacion.jsp</result>
+    </action>
+    
+    <!-- gestion de proveedores >-->
+    <!-- listar -->
+    <action name="proveedor" class="com.action.ProveedorAction" method="list">
+        <result>/proveedor.jsp</result>
+    </action> 
+    <!-- Ingresar -->
+    <action name="ingresarProveedor" class="com.action.ProveedorAction" method="create">
+        <result>/proveedor.jsp</result>
+    </action>
+    <!-- eliminar -->
+      <action name="eliminarProveedor" class="com.action.ProveedorAction" method="delete">
+        <result>/proveedor.jsp</result>
+    </action>
+    <!-- actualizar -->
+     <action name="actualizarProveedor" class="com.action.ProveedorAction" method="update">
+        <result>/proveedor.jsp</result>
+    </action>
+    <!-- buscar por codigo>-->
+     <action name="buscaPorCodigo" class="com.action.MaterialAction" method="buscaProveedorPorCodigo">
+            <result name="success">/proveedor.jsp</result>
+        </action>  
 
 <!--    acciones del proyecto  --> 
       <action name="listarProyectos" class="com.action.ProyectosAction" method="list">

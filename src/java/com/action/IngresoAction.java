@@ -57,4 +57,11 @@ private String clave;
         }
         return ir;
     }
+    
+    public String cerrar_sesion(){
+        String ir = SUCCESS;
+        
+        
+        return ir;
+    }
 }

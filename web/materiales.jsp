@@ -55,7 +55,7 @@
                                                         <s:a href="%{url}" cssClass="fs1" aria-hidden="true"  onclick="agregaYactivaPestana()">Actualizar</s:a>
                                                             
                                                             
-                                                        <s:a action="eliminarMaterialAccion">
+                                                        <s:a action="eliminarProveedor">
                                                             <s:param name="codigo" value="codigo" />
                                                             <i class="glyphicon glyphicon-trash"></i>
                                                         </s:a>    
@@ -93,22 +93,8 @@
                                     <s:textfield name="marca" label="Marca" value="%{record.marca}"></s:textfield>
                                     <s:submit value="Actualizar"></s:submit>
                                  </s:form>
-                               <!---  < //s:url var="remoteurl" action="jsontable"/>
-                                    <#/ sjg:grid
-                                        id="gridtable"
-                                        caption="Customer Examples"
-                                        dataType="json"
-                                        href="%{remoteurl}"
-                                        pager="true"
-                                        gridModel="gridModel"
-                                        rowList="10,15,20"
-                                        rowNum="15"
-                                        rownumbers="true"
-                                        >
-                                        <#sjg:gridColumn name="codigo" index="codigo" title="Código" formatter="integer" sortable="false"/>
-                                        <#/sjg:grid>
-                                  -->
-                                </div> 
+                           
+                             </div> 
                                     
                                     
                                </sj:tabbedpanel>              

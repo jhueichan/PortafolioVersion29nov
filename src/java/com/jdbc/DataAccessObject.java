@@ -19,7 +19,7 @@ public class DataAccessObject {
 		try {
 		Class.forName("oracle.jdbc.driver.OracleDriver");
 		// set the url, username and password for the database
-		connection = DriverManager.getConnection(dbUrl, "PORTAFOLIO", "portafolio");
+		connection = DriverManager.getConnection(dbUrl, "PORTAFOLIO", "1234");
                 System.out.println("conexion correcta");
 		} catch (Exception e) {
                      System.out.println("error en la conexion");
